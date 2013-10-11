@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/main"
+>
+
+	<Button android:layout_width="wrap_content" android:id="@+id/interstitialAd"
+	 android:layout_height="wrap_content" android:text="Interstitial Ad" android:width="200dip" android:height="100dip"
+	 android:visibility="visible"></Button>
+	
+	<Button android:layout_width="wrap_content" android:id="@+id/btn2"
+	 android:layout_height="wrap_content" android:text="Refresh" android:width="200dip" android:height="100dip"
+	 android:visibility="visible"
+	 ></Button>
+
+	<LinearLayout
+	    android:id="@+id/frameAdContent"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:background="@drawable/icon"
+	    android:gravity="center"
+	    android:orientation="vertical" >
+
+		<TextView
+		    android:id="@+id/textView1"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:text="WWWWWWWWW1WWWWWWWWW2WWWWW" android:gravity="center" android:typeface="normal" android:textStyle="bold" android:textSize="14dip"/>
+		<!-- <com.microsoft.advertising.android.AdControl
+			android:id="@+id/adCenter" 
+		    android:layout_width="fill_parent"
+		    android:layout_height="50dip"
+		    android:visibility="gone"
+	    /> -->
+		
+</LinearLayout>
+ 
+</LinearLayout>

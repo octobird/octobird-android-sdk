@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+
+     <Button android:layout_width="wrap_content" android:id="@+id/btnTestOn"
+	 android:layout_height="wrap_content" android:text="Test On" android:width="200dip" android:height="50dip"
+	 android:visibility="visible"/>
+      <Button android:layout_width="wrap_content" android:id="@+id/btnTestOff"
+	 android:layout_height="wrap_content" android:text="Test Off" android:width="200dip" android:height="50dip"
+	 android:visibility="visible"/>
+      
+    <Button android:layout_width="wrap_content" android:id="@+id/btnRefresh"
+	 android:layout_height="wrap_content" android:text="Refresh" android:width="200dip" android:height="50dip"
+	 android:visibility="visible"/>
+    
+	<LinearLayout
+	    android:id="@+id/frameAdContent"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:gravity="bottom|center_horizontal"
+	    android:orientation="vertical" />
+ 
+</LinearLayout>

@@ -1,0 +1,117 @@
+<project name="AdViewer" default="release.build">
+    <property name="android.dir" value="c:\eclipse\android-sdk"/>
+    <property name="android.jar" value="${android.dir}\platforms\android-11\android.jar"/>
+
+    <property name="release.dir" value="release"/>
+    <property name="demo.dir" value="${release.dir}\ads.octobird"/>
+    <property name="lib.dir" value="${demo.dir}\Libs"/>
+    <property name="sample.dir" value="${demo.dir}\OctobirdAdvertisingSamples"/>
+    <property name="doc.dir" value="${demo.dir}\Documentation"/>
+    <property name="temp.dir" value="${release.dir}\temp"/>
+    <property name="temp.classes.dir" value="${temp.dir}\classes"/>
+	<property name="jar.name" value="OctobirdAdvertising.jar"/>
+
+	<target name="release.build"  depends="clean, make.dirs">
+			<antcall target="release.build.Octobird"/>
+			<antcall target="samples"/>
+			<!-- <antcall target="javadoc"/>-->
+		    <antcall target="copylib"/>
+			<antcall target="zip"/>
+	        <delete dir="${temp.dir}"/>
+	</target>
+	
+	<target name="make.dirs">
+		    <mkdir dir="${temp.dir}"/>
+		    <mkdir dir="${temp.classes.dir}"/>
+	    	<mkdir dir="${demo.dir}"/>
+		    <mkdir dir="${lib.dir}"/>
+		    <mkdir dir="${sample.dir}"/>
+		    <mkdir dir="${doc.dir}"/>
+	</target>
+	
+	<target name="copylib">
+			<!-- <copy todir="tests\lib">
+					    	    <fileset 
+					    	    	dir="${lib.dir}" 
+					    	    	includes="*.jar" 
+					    	    	casesensitive="false"
+					    	    />				
+			</copy>	-->	
+		<copy todir="samples\libs">
+							    	    <fileset 
+							    	    	dir="${lib.dir}" 
+							    	    	includes="*.jar" 
+							    	    	casesensitive="false"
+							    	    />				
+					</copy>	
+		</target>	
+		
+	<target name="clean" description="clean up">
+	        <delete dir="${release.dir}"/>
+	</target>
+	
+	<target name="zip">
+			<zip destfile="${sample.dir}/OctobirdAdvertising_1.x.zip"
+				 	    	basedir="${sample.dir}"
+						/>
+				    	<delete includeemptydirs="true">
+							<fileset 
+								dir="${sample.dir}" 
+								includes="**/*" 
+								excludes="**/OctobirdAdvertising_1.x.zip"
+							/>
+						</delete>
+	</target>
+	
+	<target name="release.build.Octobird"  depends="compile.sources">
+				<copydir dest="${temp.classes.dir}/assets" src="assets"></copydir>
+				<jar destfile="${lib.dir}/${jar.name}"
+			    	basedir="${temp.classes.dir}"
+					manifest="MANIFEST.MF" >
+					<!-- <fileset dir="js"/> -->					
+				</jar>		
+	</target>
+		
+	<target name="compile.sources">
+			<javac destdir="${temp.classes.dir}" debug="on" debuglevel="vars" encoding="UTF-8">
+				<src path="src\com\octobird\advertising" />
+				<classpath>
+					<pathelement path="${android.jar}"/>										
+			    </classpath>				
+	        </javac>
+	</target>
+	
+	<target name="samples">
+				<copy todir="${sample.dir}/OctobirdAdvertisingSamples">
+		    	    <fileset 
+		    	    	dir="samples/" 
+		    	    	includes=",res/,src/,AndroidManifest.xml,.classpath,default.properties,.project,project.properties" 
+		    	    	casesensitive="false"
+		    	    />				
+				</copy>		
+			<copy todir="${sample.dir}/OctobirdAdvertisingSamples/libs">
+								    	    <fileset 
+								    	    	dir="${lib.dir}" 
+								    	    	includes="${jar.name}" 
+								    	    	casesensitive="false"
+								    	    />
+				</copy>
+			 	<copy todir="${sample.dir}">
+						    	    <fileset 
+						    	    	dir="${lib.dir}" 
+						    	    	includes="${jar.name}" 
+						    	    	casesensitive="false"
+						    	    />				
+				</copy>
+		<!-- <copy todir="${sample.mocean.dir}/AdSDK">
+				    	    <fileset 
+				    	    	dir="" 
+				    	    	includes=",res/,src/,assets/,AndroidManifest.xml,.classpath,default.properties,.project,project.properties,build.xml,MANIFEST.MF" 
+				    	    	casesensitive="false"
+				    	    />				
+						</copy>	 -->	
+	</target>
+	
+	
+</project>
+	
