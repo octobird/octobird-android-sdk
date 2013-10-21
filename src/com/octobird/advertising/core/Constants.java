@@ -1,7 +1,7 @@
 package com.octobird.advertising.core;
 
 public class Constants {
-    public static final String SDK_VERSION = "1.0.0000";
+    public static final String SDK_VERSION = "1.1.0000";
     public static final String API_VERSION = "300";
     public static final int DEFAULT_COLOR = 0;
 

@@ -10,6 +10,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.view.Display;
+import android.view.WindowManager;
+import android.graphics.Point;
 
 import com.octobird.advertising.core.AdCallbackManager;
 import com.octobird.advertising.core.AdServerRequest;
@@ -43,6 +46,7 @@ public class AdControl extends FrameLayout {
     private boolean isFirstAttachNotDone = true;
     private boolean isNeedRequestOnResize = false;
     private boolean isShortTimer = false;
+    private boolean isStopped = false;
 
     private static int requestCounter = 0;
     private int rCounterLocal;
@@ -84,8 +88,9 @@ public class AdControl extends FrameLayout {
         adserverRequest = new AdServerRequest(adLog, context);
         autoDetectParameters(context);
         if ((width != null)&&(height != null))
-            adserverRequest.setParameter(AdServerRequest.PARAMETER_DISPLAY,
+            adserverRequest.setParameter(AdServerRequest.PARAMETER_AREA_SIZE,
                     String.valueOf(width)+"x"+String.valueOf(height));
+
         createLayouts(context, sid);
     }
 
@@ -173,6 +178,18 @@ public class AdControl extends FrameLayout {
 
         ContentManager cm = ContentManager.getInstance(context);
         adserverRequest.setParameter(AdServerRequest.PARAMETER_USER_AGENT, cm.getUserAgent());
+
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        try {
+            Point size = new Point();
+            display.getSize(size);
+            adserverRequest.setParameter(AdServerRequest.PARAMETER_DISPLAY,
+                        String.valueOf(size.x)+"x"+String.valueOf(size.y));
+        } catch (NoSuchMethodError e) {
+            adserverRequest.setParameter(AdServerRequest.PARAMETER_DISPLAY,
+                        String.valueOf(display.getWidth())+"x"+String.valueOf(display.getHeight()));
+        }
     }
 
     /**
@@ -484,7 +501,7 @@ public class AdControl extends FrameLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        adserverRequest.setParameter(AdServerRequest.PARAMETER_DISPLAY,
+        adserverRequest.setParameter(AdServerRequest.PARAMETER_AREA_SIZE,
                 String.valueOf(w)+"x"+String.valueOf(h));
         
         if(isNeedRequestOnResize)
@@ -576,7 +593,7 @@ public class AdControl extends FrameLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         
-        if(isFirstAttachNotDone && (adserverRequest.getParameter(AdServerRequest.PARAMETER_DISPLAY)==null)
+        if(isFirstAttachNotDone && (adserverRequest.getParameter(AdServerRequest.PARAMETER_AREA_SIZE)==null)
         		)
         	isNeedRequestOnResize = true;
         isFirstAttachNotDone = false;
@@ -640,6 +657,14 @@ public class AdControl extends FrameLayout {
     	}
     	super.setVisibility(visibility);    	
     }
+
+    public void onPause() {
+        isStopped = true;
+    }
+    
+    public void onResume() {
+        isStopped = false;
+    }
     
     /*@Override
     protected void onVisibilityChanged(View changedView, int visibility) {
@@ -669,8 +694,11 @@ public class AdControl extends FrameLayout {
     }
 
     private void startLoadContent(Context context, AdControl view) {
+        if(isStopped) {
+            return;
+        }
         try {
-            if (adserverRequest.getParameter(AdServerRequest.PARAMETER_DISPLAY) == null)
+            if (adserverRequest.getParameter(AdServerRequest.PARAMETER_AREA_SIZE) == null)
                 throw new AdControlException(Constants.STR_LOG_WRONG_DISPLAY);
 
             if ((adserverRequest.getParameter(AdServerRequest.PARAMETER_SID) == null)
@@ -687,7 +715,7 @@ public class AdControl extends FrameLayout {
                                 : Constants.UPDATE_TIME_INTERVAL * 1000);
                 return;
             }
-            String[] size = adserverRequest.getParameter(AdServerRequest.PARAMETER_DISPLAY).split("x");
+            String[] size = adserverRequest.getParameter(AdServerRequest.PARAMETER_AREA_SIZE).split("x");
             int w = Integer.parseInt(size[0]);
             int h = Integer.parseInt(size[1]);
             if (w<300)
@@ -712,7 +740,7 @@ public class AdControl extends FrameLayout {
             String url = adserverRequest.toString();
             adLog.log(AdLog.LOG_LEVEL_ALL, AdLog.LOG_TYPE_INFO, String.format(Constants.STR_LOG_REQUEST_GET, requestCounter), url);
             ContentManager.getInstance(context).startLoadContent(this, url,
-            		adserverRequest.getParameter(AdServerRequest.PARAMETER_DISPLAY)
+            		adserverRequest.getParameter(AdServerRequest.PARAMETER_AREA_SIZE)
                     );
         } catch (AdControlException e) {
             adLog.log(AdLog.LOG_LEVEL_NORMAL, AdLog.LOG_TYPE_ERROR, Constants.STR_LOG_ADCONTROL_startLoadContent,

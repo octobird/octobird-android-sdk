@@ -208,6 +208,7 @@ public class ContentManager {
     }
 
     private void initDefaultParameters(Context context) {
+        String deviceIdMd5 = null;
     	try {		
 	        String deviceId;
 	        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -230,7 +231,11 @@ public class ContentManager {
 	            deviceId = getId(context);
 	        }
 	
-	        String deviceIdMd5 = Utils.md5(deviceId);
+	        deviceIdMd5 = Utils.md5(deviceId);
+        } catch (Exception e) {
+            //TODO 
+            AdLog.staticLog(AdLog.LOG_LEVEL_CRITICAL, AdLog.LOG_TYPE_ERROR, Constants.STR_LOG_initDefaultParameters, e.getMessage());
+        }
 	
 	
 	        StringBuilder buffer = new StringBuilder();
@@ -253,10 +258,10 @@ public class ContentManager {
 	        
 	        autoDetectParameters = buffer.toString();
 	    	
-		} catch (Exception e) {
+		//} catch (Exception e) {
 			//TODO 
-			AdLog.staticLog(AdLog.LOG_LEVEL_CRITICAL, AdLog.LOG_TYPE_ERROR, Constants.STR_LOG_initDefaultParameters, e.getMessage());
-		}
+			//AdLog.staticLog(AdLog.LOG_LEVEL_CRITICAL, AdLog.LOG_TYPE_ERROR, Constants.STR_LOG_initDefaultParameters, e.getMessage());
+		//}
     }
 
     private synchronized static String getId(Context context) {

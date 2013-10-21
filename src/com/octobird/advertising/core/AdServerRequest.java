@@ -23,6 +23,7 @@ public class AdServerRequest {
     public final static String PARAMETER_USER_AGENT = "device";
     //public final static String PARAMETER_WIDTH = "w";
     //public final static String PARAMETER_HEIGHT = "h";
+    public final static String PARAMETER_AREA_SIZE = "area";
     public final static String PARAMETER_DISPLAY = "display";
 	public final static String PARAMETER_BLOCKS = "blocks";
 	public static final String PARAMETER_MAX_WIDHT = "width";

@@ -57,4 +57,20 @@ public class SimpleBanner extends Activity {
         float scale = getBaseContext().getResources().getDisplayMetrics().density;
         return (int) (pixel * scale + 0.5f);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(adserverView!=null) {
+            adserverView.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(adserverView!=null) {
+            adserverView.onPause();
+        }
+    }
 }
